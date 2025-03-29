@@ -1,3 +1,4 @@
+// src/components/ChatIA.tsx
 'use client';
 
 import { useState } from 'react';
