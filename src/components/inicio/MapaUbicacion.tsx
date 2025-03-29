@@ -4,70 +4,100 @@ import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Polyline, useMap, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-interface UbicacionProps {
-    coordenadas: { lat: number; lng: number }[];
+interface Coordenada {
+  lat: number;
+  lng: number;
 }
 
-// Componente auxiliar para centrar el mapa en toda la ruta
-function CentrarMapa({ coordenadas }: UbicacionProps) {
-    const map = useMap();
-    useEffect(() => {
-        if (coordenadas.length > 1) {
-            const bounds = L.latLngBounds(coordenadas.map(coord => [coord.lat, coord.lng]));
-            map.fitBounds(bounds, { padding: [20, 20] });
-        } else if (coordenadas.length === 1) {
-            map.setView(coordenadas[0], 15);
-        }
-    }, [coordenadas, map]);
-    return null;
+interface MascotaConRuta {
+  nombre: string;
+  tipo: 'perro' | 'gato';
+  coordenadas: Coordenada[];
 }
 
-export default function MapaUbicacion({ coordenadas }: UbicacionProps) {
-    const [L, setL] = useState<any>(null);
+interface Props {
+  mascotas: MascotaConRuta[];
+}
 
-    useEffect(() => {
-        (async () => {
-            const leaflet = await import('leaflet');
-            setL(leaflet);
-        })();
-    }, []);
+function CentrarMapa({ mascotas, L }: Props & { L: any }) {
+  const map = useMap();
 
-    if (!L) return null;
+  useEffect(() => {
+    if (!L) return;
+    const todasLasCoords = mascotas.flatMap(m => m.coordenadas);
+    if (todasLasCoords.length > 1) {
+      const bounds = L.latLngBounds(todasLasCoords.map(coord => [coord.lat, coord.lng]));
+      map.fitBounds(bounds, { padding: [20, 20] });
+    } else if (todasLasCoords.length === 1) {
+      map.setView(todasLasCoords[0], 15);
+    }
+  }, [mascotas, map, L]);
 
-    const iconoPerrito = L.divIcon({
-        html: '🐶',
-        className: 'text-3xl',
-        iconSize: [30, 30],
-        iconAnchor: [15, 15],
-    });
+  return null;
+}
 
-    return (
-        <section className="relative z-10">
-            <h2 className="text-2xl font-semibold mb-4">📍 Ubicación</h2>
-            <div className="relative w-full h-96 rounded shadow overflow-hidden z-10">
-                <MapContainer
-                    center={coordenadas[0] || { lat: 0, lng: 0 }}
-                    zoom={14}
-                    scrollWheelZoom={false}
-                    className="w-full h-full z-10"
-                    style={{ zIndex: 0 }}
+export default function MapaUbicacion({ mascotas }: Props) {
+  const [L, setL] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      import('leaflet').then(leaflet => {
+        setL(leaflet);
+      });
+    }
+  }, []);
+
+  if (!L) return <p className="text-center">Cargando mapa...</p>;
+
+  const colores = ['#fdd835', '#ffa726', '#fb8c00', '#1976d2'];
+
+  const obtenerIcono = (tipo: 'perro' | 'gato') => L.divIcon({
+    html: tipo === 'perro' ? '🐶' : '😸',
+    className: 'text-3xl',
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
+  });
+
+  return (
+    <section className="relative z-10">
+      <h2 className="text-2xl font-semibold mb-4">📍 Ubicación</h2>
+      <div className="relative w-full h-96 rounded shadow overflow-hidden z-10">
+        <MapContainer
+          center={mascotas[0]?.coordenadas[0] || { lat: 0, lng: 0 }}
+          zoom={14}
+          scrollWheelZoom={false}
+          className="w-full h-full z-10"
+          style={{ zIndex: 0 }}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+
+          {mascotas.map((m, i) => (
+            <div key={i}>
+              {m.coordenadas.length > 1 && (
+                <Polyline
+                  positions={m.coordenadas}
+                  color={colores[i % colores.length]}
+                />
+              )}
+              {m.coordenadas.length > 0 && (
+                <Marker
+                  position={m.coordenadas[m.coordenadas.length - 1]}
+                  icon={obtenerIcono(m.tipo)}
                 >
-                    <TileLayer
-                        attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-
-                    {coordenadas.length > 1 && <Polyline positions={coordenadas} color="#1976D2" />}
-
-                    {coordenadas.length > 0 && (
-                        <Marker position={coordenadas[coordenadas.length - 1]} icon={iconoPerrito}>
-                            <Popup>Última ubicación del perrito 🐾</Popup>
-                        </Marker>
-                    )}
-
-                    <CentrarMapa coordenadas={coordenadas} />
-                </MapContainer>
+                  <Popup>
+                    Última ubicación de {m.nombre} {m.tipo === 'gato' ? '😸' : '🐶'}
+                  </Popup>
+                </Marker>
+              )}
             </div>
-        </section>
-    );
+          ))}
+
+          <CentrarMapa mascotas={mascotas} L={L} />
+        </MapContainer>
+      </div>
+    </section>
+  );
 }
