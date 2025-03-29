@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 export default function RegisterPage() {
     const [form, setForm] = useState({
@@ -14,6 +15,21 @@ export default function RegisterPage() {
         password: "",
         confirmPassword: "",
     })
+    const [error, setError] = useState("")
+    const router = useRouter()
+
+    const handleSubmit = () => {
+        const { name, email, password, confirmPassword } = form
+
+        if (!name || !email || !password || !confirmPassword) {
+            setError("Se requieren todos los campos para continuar.")
+            return
+        }
+
+        // Aquí puedes hacer más validaciones si quieres...
+        setError("")
+        router.push("/login")
+    }
 
     return (
         <div className="min-h-screen bg-[#F2F2F2] flex items-center justify-center px-4 py-12">
@@ -58,10 +74,16 @@ export default function RegisterPage() {
                         />
                     </div>
 
-                    <Button className="w-full bg-[#FDD835] hover:bg-[#FFA726] text-black border-none">
+                    {error && (
+                        <p className="text-sm text-red-600 font-medium text-center">{error}</p>
+                    )}
+
+                    <Button
+                        className="w-full bg-[#FDD835] hover:bg-[#FFA726] text-black border-none"
+                        onClick={handleSubmit}
+                    >
                         Registrarse
                     </Button>
-
 
                     <Link href="/" passHref>
                         <Button variant="ghost" className="w-full text-[#FB8C00] mt-2" asChild>
