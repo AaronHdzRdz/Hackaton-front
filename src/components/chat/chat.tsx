@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Send, MessageCircle, X } from 'lucide-react';
+import { getChat } from '../../../api/gemini.js'; // Importa la función de la API
 
 export default function ChatIA() {
   const [messages, setMessages] = useState<{ role: 'user' | 'ai'; content: string }[]>([]);
@@ -9,29 +10,32 @@ export default function ChatIA() {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
+  // Función para manejar el envío de los mensajes
   const handleSend = async () => {
-    if (!input.trim()) return;
+    if (!input.trim()) return;  // Si no hay texto, no hace nada
+
     const userMessage = { role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setLoading(true);
 
     try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: input }),
-      });
-      const data = await res.json();
-      const aiMessage = { role: 'ai', content: data.response };
-      setMessages(prev => [...prev, aiMessage]);
+      // Llamada a la API para obtener la respuesta de la IA
+      const aiResponse = await getChat(input);  // Usamos la función getChat importada
+
+      // Si la respuesta no está vacía, se agrega al chat
+      if (aiResponse.trim()) {
+        const aiMessage = { role: 'ai', content: aiResponse };
+        setMessages(prev => [...prev, aiMessage]);
+      }
     } catch (error) {
-      console.error('Error al obtener respuesta de la IA:', error);
+      console.error('❌ Error al obtener respuesta de la IA:', error);
     } finally {
       setLoading(false);
     }
   };
 
+  // Función para enviar el mensaje al presionar 'Enter'
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') handleSend();
   };
@@ -60,10 +64,11 @@ export default function ChatIA() {
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`max-w-[80%] px-4 py-2 rounded-lg text-sm whitespace-pre-wrap ${msg.role === 'user'
+                className={`max-w-[80%] px-4 py-2 rounded-lg text-sm whitespace-pre-wrap ${
+                  msg.role === 'user'
                     ? 'bg-[#FB8C00] text-white self-end ml-auto'
                     : 'bg-white text-[#333] self-start mr-auto border border-[#1976D2]'
-                  }`}
+                }`}
               >
                 {msg.content}
               </div>
