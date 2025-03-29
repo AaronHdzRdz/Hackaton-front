@@ -72,7 +72,7 @@ export default function InicioResumen({
         ? 'Comportamiento de tu mascota DENTRO de lo HABITUAL'
         : 'Comportamiento de tu mascota FUERA de lo HABITUAL';
 
-    const estadoColor = estadoGeneral === 'bueno' ? 'bg-green-500' : 'bg-orange-400';
+    const estadoColor = estadoGeneral === 'bueno' ? 'bg-green-500' : 'bg-red-500';
 
     return (
         <section>

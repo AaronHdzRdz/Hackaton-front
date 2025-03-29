@@ -81,7 +81,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="ml-[64px] w-[calc(100%-64px)] flex flex-col transition-all duration-300">
                 <header className="relative px-4 py-3 bg-white shadow-md flex items-center justify-center">
                     <h1 className="text-lg font-bold text-[#FB8C00] text-center">
-                        {isDashboard ? 'Inicio' : 'PetPulse'}
+                        {isDashboard ? 'PetCare' : 'PetCare'}
                     </h1>
                 </header>
 
