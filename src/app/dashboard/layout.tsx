@@ -20,8 +20,7 @@ function Sidebar() {
     const menuItems = [
         { href: "/dashboard/inicio", label: "Inicio", icon: <LayoutDashboard className="w-5 h-5" /> },
         { href: "/dashboard/mascotas", label: "Mis Mascotas", icon: <PawPrint className="w-5 h-5" /> },
-        { href: "/dashboard/mascotas/nueva", label: "Registrar Mascota", icon: <PlusCircle className="w-5 h-5" /> },
-        { href: "/dashboard/mascotas/eliminar", label: "Eliminar Mascota", icon: <PlusCircle className="w-5 h-5" /> },
+        { href: "/dashboard/mascota-nueva", label: "Registrar Mascota", icon: <PlusCircle className="w-5 h-5" /> },
         { href: "/dashboard/historial", label: "Historial", icon: <BarChart2 className="w-5 h-5" /> }
     ]
 

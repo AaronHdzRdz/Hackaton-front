@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Pencil, Save } from 'lucide-react';
+import { Pencil, Save, Trash } from 'lucide-react';
 
 interface Mascota {
     id: string;
@@ -46,6 +46,11 @@ export default function FichaMascota({ mascota }: { mascota: Mascota }) {
     const guardarCambios = () => {
         setEditando(false);
         console.log('Datos actualizados:', formData);
+    };
+
+    const eliminarMascota = () => {
+        console.log(`Mascota eliminada: ${formData.id}`);
+        // Aquí puedes agregar la lógica de eliminación (backend, eliminación de estado, etc.)
     };
 
     return (
@@ -97,18 +102,36 @@ export default function FichaMascota({ mascota }: { mascota: Mascota }) {
                         </div>
 
                         <div>
-                            <p className="text-sm text-[#999] mb-1">Especie</p>
-                            <p className="text-base font-semibold text-[#333]">{formData.especie}</p>
+                            <label className="block text-sm text-[#333] mb-1">Especie</label>
+                            <input
+                                name="especie"
+                                value={formData.especie}
+                                onChange={handleChange}
+                                disabled={!editando}
+                                className="w-5/12 max-w-xs text-sm bg-white border px-2 py-1 rounded-full"
+                            />
                         </div>
 
                         <div>
-                            <p className="text-sm text-[#999] mb-1">Raza</p>
-                            <p className="text-base font-semibold text-[#333]">{formData.raza}</p>
+                            <label className="block text-sm text-[#333] mb-1">Raza</label>
+                            <input
+                                name="raza"
+                                value={formData.raza}
+                                onChange={handleChange}
+                                disabled={!editando}
+                                className="w-5/12 max-w-xs text-sm bg-white border px-2 py-1 rounded-full"
+                            />
                         </div>
 
                         <div>
-                            <p className="text-sm text-[#999] mb-1">Tamaño</p>
-                            <p className="text-base font-semibold text-[#333]">{formData.tamaño}</p>
+                            <label className="block text-sm text-[#333] mb-1">Tamaño</label>
+                            <input
+                                name="tamaño"
+                                value={formData.tamaño}
+                                onChange={handleChange}
+                                disabled={!editando}
+                                className="w-5/12 max-w-xs text-sm bg-white border px-2 py-1 rounded-full"
+                            />
                         </div>
 
                         <div>
@@ -136,6 +159,16 @@ export default function FichaMascota({ mascota }: { mascota: Mascota }) {
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div className="flex justify-center mt-4">
+                <button
+                    onClick={eliminarMascota}
+                    className="flex items-center gap-2 px-4 py-1 border rounded-full text-white bg-red-600 hover:bg-red-700"
+                >
+                    <Trash className="w-4 h-4" />
+                    Eliminar Mascota
+                </button>
             </div>
         </section>
     );
