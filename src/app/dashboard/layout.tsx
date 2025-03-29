@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { PawPrint, PlusCircle, LayoutDashboard, User, BarChart2 } from "lucide-react"
+import { PawPrint, PlusCircle, LayoutDashboard, User, BarChart2, MessageCircle } from "lucide-react"
 import { usePathname } from "next/navigation"
 import DefaultInicioView from "./inicio/page"
 import Script from "next/script"
+import ChatIA from './../../components/chat/chat';
 
 function Sidebar() {
     const [isOpen, setIsOpen] = useState(false)
@@ -88,6 +89,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                     {isDashboard ? <DefaultInicioView /> : children}
                 </main>
             </div>
+            <ChatIA />
         </div>
     )
 }
