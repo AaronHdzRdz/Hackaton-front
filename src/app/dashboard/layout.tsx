@@ -2,12 +2,17 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+<<<<<<< Updated upstream
 import { PawPrint, PlusCircle, LayoutDashboard, User, BarChart2, LogOut } from "lucide-react";
+=======
+import { PawPrint, PlusCircle, LayoutDashboard, User, BarChart2, LogOut, } from "lucide-react";
+>>>>>>> Stashed changes
 import { usePathname } from "next/navigation";
 import DefaultInicioView from "./inicio/page";
 import Script from "next/script";
 import ChatIA from './../../components/chat/chat';
 import Notificaciones from './../../components/notificasione/Notificaciones';
+import { Clipboard, UserPlus } from "lucide-react";
 
 function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -23,7 +28,12 @@ function Sidebar() {
     { href: "/dashboard/mascotas", label: "Mis Mascotas", icon: <PawPrint className="w-5 h-5" /> },
     { href: "/dashboard/mascota-nueva", label: "Registrar Mascota", icon: <PlusCircle className="w-5 h-5" /> },
     { href: "/dashboard/historial", label: "Historial", icon: <BarChart2 className="w-5 h-5" /> },
+<<<<<<< Updated upstream
     { href: "/dashboard/historial", label: "Historial", icon: <BarChart2 className="w-5 h-5" /> },
+=======
+    { href: "/dashboard/pet/67e763ae1a23ac232de390bc/health", label: "Reporte", icon: <Clipboard className="w-5 h-5" /> },
+    { href: "/dashboard/manual", label: "Registrar Veterinario", icon: <UserPlus className="w-5 h-5" /> },
+>>>>>>> Stashed changes
     { href: "/", label: "Cerrar Cesión", icon: <LogOut className="w-5 h-5" /> },
   ];
 
@@ -57,7 +67,11 @@ function Sidebar() {
               href={href}
               className={`flex items-center gap-3 py-2 px-3 rounded w-full transition-colors duration-200
                 ${isLogout
+<<<<<<< Updated upstream
                   ? 'bg-red-600 text-white hover:bg-red-700 font-semibold'
+=======
+                  ? 'bg-red-600 text-white hover:bg-red-700 font-semibold '
+>>>>>>> Stashed changes
                   : isActive
                     ? 'bg-[#FDD835] text-black font-semibold'
                     : 'text-[#333] hover:bg-[#FFF8E7]'}`}
