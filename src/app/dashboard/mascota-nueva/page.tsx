@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Pencil, Save, Trash } from 'lucide-react';
+import { Save, Trash } from 'lucide-react';
 
 interface Mascota {
   id: string;
@@ -15,10 +15,10 @@ interface Mascota {
 }
 
 export default function FichaMascota({ mascota }: { mascota: Mascota }) {
-  const [editando, setEditando] = useState(false);
+  const [editando, setEditando] = useState(true); // Siempre en modo edición
   const [formData, setFormData] = useState<Mascota | null>({ ...mascota });
   const [preview, setPreview] = useState(formData ? formData.foto : '');
-  const [eliminada, setEliminada] = useState(false);  // Estado para simular eliminación
+  const [eliminada, setEliminada] = useState(false); // Estado para simular eliminación
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,19 +41,18 @@ export default function FichaMascota({ mascota }: { mascota: Mascota }) {
   };
 
   const handleImageClick = () => {
-    if (editando && fileInputRef.current) {
+    if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
 
   const guardarCambios = () => {
-    setEditando(false);
     console.log('Datos actualizados:', formData);
   };
 
   const eliminarMascota = () => {
     setEliminada(true); // Cambia el estado a eliminada
-    setFormData(null);  // Elimina los datos de la mascota
+    setFormData(null); // Elimina los datos de la mascota
     console.log(`Mascota eliminada: ${formData?.id}`);
   };
 
@@ -73,13 +72,13 @@ export default function FichaMascota({ mascota }: { mascota: Mascota }) {
   return (
     <section className="bg-white p-6 rounded-lg shadow w-full max-w-5xl mx-auto">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-semibold text-[#333]">🐾 Información de la Mascota</h2>
+        <h2 className="text-2xl font-semibold text-[#333]">🐾 Registrar Mascota</h2>
         <button
-          onClick={editando ? guardarCambios : () => setEditando(true)}
+          onClick={guardarCambios}
           className="flex items-center gap-2 px-4 py-1 border rounded-full text-white bg-[#FB8C00] hover:bg-[#FFA726]"
         >
-          {editando ? <Save className="w-4 h-4" /> : <Pencil className="w-4 h-4" />}
-          {editando ? 'Guardar' : 'Editar'}
+          <Save className="w-4 h-4" />
+          Actualizar
         </button>
       </div>
 
@@ -89,7 +88,7 @@ export default function FichaMascota({ mascota }: { mascota: Mascota }) {
             className="w-40 h-40 rounded-full border-4 border-[#1976D2] overflow-hidden cursor-pointer"
             onClick={handleImageClick}
           >
-            <img src={preview} alt="Foto de la mascota" className="w-full h-full object-cover" />
+            <img src={preview} alt="" className="w-full h-full object-cover" />
           </div>
           <input
             type="file"
@@ -102,10 +101,6 @@ export default function FichaMascota({ mascota }: { mascota: Mascota }) {
 
         <div className="col-span-2">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-4">
-            <div>
-              <p className="text-sm text-[#999] mb-1">ID</p>
-              <p className="text-base font-semibold text-[#333]">{formData?.id}</p>
-            </div>
 
             <div>
               <label className="block text-sm text-[#333] mb-1">Nombre</label>
@@ -113,7 +108,6 @@ export default function FichaMascota({ mascota }: { mascota: Mascota }) {
                 name="nombre"
                 value={formData?.nombre || ''}
                 onChange={handleChange}
-                disabled={!editando}
                 className="w-5/12 text-sm bg-white border px-2 py-1 rounded-full"
               />
             </div>
@@ -124,7 +118,6 @@ export default function FichaMascota({ mascota }: { mascota: Mascota }) {
                 name="especie"
                 value={formData?.especie || ''}
                 onChange={handleChange}
-                disabled={!editando}
                 className="w-5/12 text-sm bg-white border px-2 py-1 rounded-full"
               />
             </div>
@@ -135,7 +128,6 @@ export default function FichaMascota({ mascota }: { mascota: Mascota }) {
                 name="raza"
                 value={formData?.raza || ''}
                 onChange={handleChange}
-                disabled={!editando}
                 className="w-5/12 text-sm bg-white border px-2 py-1 rounded-full"
               />
             </div>
@@ -146,7 +138,6 @@ export default function FichaMascota({ mascota }: { mascota: Mascota }) {
                 name="tamaño"
                 value={formData?.tamaño || ''}
                 onChange={handleChange}
-                disabled={!editando}
                 className="w-5/12 text-sm bg-white border px-2 py-1 rounded-full"
               />
             </div>
@@ -158,7 +149,6 @@ export default function FichaMascota({ mascota }: { mascota: Mascota }) {
                 type="number"
                 value={formData?.edad || ''}
                 onChange={handleChange}
-                disabled={!editando}
                 className="w-5/12 text-sm bg-white border px-2 py-1 rounded-full"
               />
             </div>
@@ -170,22 +160,11 @@ export default function FichaMascota({ mascota }: { mascota: Mascota }) {
                 type="number"
                 value={formData?.peso || ''}
                 onChange={handleChange}
-                disabled={!editando}
                 className="w-6/12 text-sm bg-white border px-2 py-1 rounded-full"
               />
             </div>
           </div>
         </div>
-      </div>
-
-      <div className="flex justify-center mt-4">
-        <button
-          onClick={eliminarMascota}
-          className="flex items-center gap-2 px-4 py-1 border rounded-full text-white bg-red-600 hover:bg-red-700"
-        >
-          <Trash className="w-4 h-4" />
-          Eliminar Mascota
-        </button>
       </div>
     </section>
   );

@@ -35,7 +35,6 @@ export default function InicioResumen({
     pulsoActual,
     nivelActividad,
     alimentoEnPlato,
-    ultimoAlimento,
     estadoGeneral,
 }: ResumenProps) {
     const pulsoValue = parseInt(pulsoActual.replace(/\D/g, '')) || 0;
@@ -77,33 +76,29 @@ export default function InicioResumen({
     return (
         <section>
             <h2 className="text-2xl font-semibold mb-4">📊 Resumen en tiempo real</h2>
-
+    
             <div className={`mb-4 p-4 rounded shadow text-white ${estadoColor}`}>
                 {estadoTexto}
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div className="bg-white p-6 rounded shadow flex flex-col items-center justify-center text-center min-h-[200px]">
+    
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-white p-6 rounded shadow flex flex-col items-center justify-center text-center">
                     <p className="text-6xl font-bold text-[#FB8C00]">{pulsoValue}</p>
                     <p className="text-3xl font-semibold text-[#666]">BPM</p>
                     <p className="mt-2 text-base font-medium">Pulso actual</p>
                 </div>
-
-                <div className="bg-white p-4 rounded shadow flex flex-col items-start justify-start">
+    
+                <div className="bg-white p-4 rounded shadow flex flex-col items-center justify-center">
                     <p className="mb-2 font-medium">Nivel de actividad</p>
                     <Scatter data={scatterData} options={scatterOptions} />
                 </div>
-
-                <div className="bg-white p-6 rounded shadow flex flex-col items-center justify-center text-center min-h-[200px]">
+    
+                <div className="bg-white p-6 rounded shadow flex flex-col items-center justify-center text-center">
                     <Icono className={`w-16 h-16 ${iconColor}`} />
                     <p className="text-xl font-medium mt-2">{textoComida}</p>
-                </div>
-
-                <div className="bg-white p-4 rounded shadow flex flex-col items-start justify-start">
-                    <button className="bg-[#FB8C00] text-white py-2 px-4 rounded hover:bg-[#FFA726]">Dispensar alimento</button>
-                    <p className="text-sm text-gray-600 mt-2">Último alimento dispensado: {ultimoAlimento}</p>
                 </div>
             </div>
         </section>
     );
+    
 }

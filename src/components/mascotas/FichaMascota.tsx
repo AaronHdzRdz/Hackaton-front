@@ -72,7 +72,7 @@ export default function FichaMascota({ mascota }: { mascota: Mascota }) {
                         className="w-40 h-40 rounded-full border-4 border-[#1976D2] overflow-hidden cursor-pointer"
                         onClick={handleImageClick}
                     >
-                        <img src={preview} alt="Foto de la mascota" className="w-full h-full object-cover" />
+                        <img src={preview} alt="" className="w-full h-full object-cover" />
                     </div>
                     <input
                         type="file"

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { PawPrint, PlusCircle, LayoutDashboard, User, BarChart2 } from "lucide-react";
+import { PawPrint, PlusCircle, LayoutDashboard, User, BarChart2, LogOut } from "lucide-react";
 import { usePathname } from "next/navigation";
 import DefaultInicioView from "./inicio/page";
 import Script from "next/script";
@@ -23,6 +23,7 @@ function Sidebar() {
     { href: "/dashboard/mascotas", label: "Mis Mascotas", icon: <PawPrint className="w-5 h-5" /> },
     { href: "/dashboard/mascota-nueva", label: "Registrar Mascota", icon: <PlusCircle className="w-5 h-5" /> },
     { href: "/dashboard/historial", label: "Historial", icon: <BarChart2 className="w-5 h-5" /> },
+    { href: "/", label: "Cerrar Cesión", icon: <LogOut className="w-5 h-5" /> },
   ];
 
   return (
@@ -47,14 +48,23 @@ function Sidebar() {
       <nav className="mt-4 px-2 space-y-2">
         {menuItems.map(({ href, label, icon }) => {
           const isActive = pathname === href || (href === "/inicio" && pathname === "/dashboard");
+          const isLogout = label === "Cerrar Cesión";
+
           return (
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-3 py-2 px-3 rounded w-full transition-colors duration-200 ${isActive ? 'bg-[#FDD835] text-black font-semibold' : 'text-[#333] hover:bg-[#FFF8E7]'}`}
+              className={`flex items-center gap-3 py-2 px-3 rounded w-full transition-colors duration-200
+                ${isLogout
+                  ? 'bg-red-600 text-white hover:bg-red-700 font-semibold'
+                  : isActive
+                    ? 'bg-[#FDD835] text-black font-semibold'
+                    : 'text-[#333] hover:bg-[#FFF8E7]'}`}
             >
               <div className="min-w-[24px]">{icon}</div>
-              <span className={`transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'} whitespace-nowrap`}>{label}</span>
+              <span className={`transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'} whitespace-nowrap`}>
+                {label}
+              </span>
             </Link>
           );
         })}
@@ -67,13 +77,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const isDashboard = pathname === "/dashboard" || pathname === "/dashboard/inicio";
 
-  // 🧠 Estado para notificaciones
   const [notificaciones, setNotificaciones] = useState([
     { mensaje: "Pulso elevado en Luna", leido: false, hora: "08:43 AM" },
     { mensaje: "Baja actividad en Milo", leido: true, hora: "Ayer" },
   ]);
 
-  // ✅ Función para marcar como atendido
   const atenderNotificacion = (index: number) => {
     const nuevas = [...notificaciones];
     nuevas[index].leido = true;
@@ -95,7 +103,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             {isDashboard ? 'PetCare' : 'PetCare'}
           </h1>
 
-          {/* Notificaciones con estado */}
           <div className="absolute right-4">
             <Notificaciones
               notificaciones={notificaciones}
