@@ -23,6 +23,7 @@ function Sidebar() {
     { href: "/dashboard/mascotas", label: "Mis Mascotas", icon: <PawPrint className="w-5 h-5" /> },
     { href: "/dashboard/mascota-nueva", label: "Registrar Mascota", icon: <PlusCircle className="w-5 h-5" /> },
     { href: "/dashboard/historial", label: "Historial", icon: <BarChart2 className="w-5 h-5" /> },
+    { href: "/dashboard/historial", label: "Historial", icon: <BarChart2 className="w-5 h-5" /> },
     { href: "/", label: "Cerrar Cesión", icon: <LogOut className="w-5 h-5" /> },
   ];
 
