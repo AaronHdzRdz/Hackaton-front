@@ -1,68 +1,104 @@
-interface HistorialProps {
-    pulso: {
-        promedioDiario: string;
-        promedioSemanal: string;
-    };
-    alimentosConsumidos: { dia: string; cantidad: string }[];
-    actividad: {
-        promedioDiario: string;
-        promedioSemanal: string;
-    };
-    alertas: { mensaje: string; hora: string }[];
+'use client';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+
+interface Props {
+  pulso: {
+    promedioDiario: string;
+    promedioSemanal: string;
+  };
+  alimentosConsumidos: Array<{
+    dia: string;
+    cantidad: string;
+  }>;
+  actividad: {
+    promedioDiario: string;
+    promedioSemanal: string;
+  };
+  alertas: Array<{
+    mensaje: string;
+    hora: string;
+  }>;
 }
 
-export default function HistorialMascota({
-    pulso,
-    alimentosConsumidos,
-    actividad,
-    alertas,
-}: HistorialProps) {
-    return (
-        <section>
-            <h2 className="text-2xl font-semibold mb-4">📈 Historial</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Pulso promedio */}
-                <div className="bg-white p-4 rounded shadow">
-                    <p className="mb-2 font-medium">Promedio de pulsaciones</p>
-                    <ul className="text-sm list-disc list-inside">
-                        <li>Hoy: {pulso.promedioDiario}</li>
-                        <li>Semanal: {pulso.promedioSemanal}</li>
-                    </ul>
-                </div>
+export default function HistorialMascota() {
+  const [historial, setHistorial] = useState<Props | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-                {/* Registro de alimentos consumidos */}
-                <div className="bg-white p-4 rounded shadow">
-                    <p className="mb-2 font-medium">Registro de alimentos consumidos</p>
-                    <ul className="text-sm list-disc list-inside">
-                        {alimentosConsumidos.map((alimento, index) => (
-                            <li key={index}>
-                                {alimento.dia}: {alimento.cantidad}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+  const petId = '67e763ae1a23ac232de390bc'; // Cambia al id real
 
-                {/* Actividad promedio */}
-                <div className="bg-white p-4 rounded shadow">
-                    <p className="mb-2 font-medium">Promedio de actividad</p>
-                    <ul className="text-sm list-disc list-inside">
-                        <li>Hoy: {actividad.promedioDiario}</li>
-                        <li>Semanal: {actividad.promedioSemanal}</li>
-                    </ul>
-                </div>
+  useEffect(() => {
+    const obtenerDatosMascota = async () => {
+      try {
+        const { data } = await axios.get(`http://localhost:5000/api/health/state/${petId}`);
 
-                {/* Alertas de salud */}
-                <div className="bg-white p-4 rounded shadow">
-                    <p className="mb-2 font-medium">Alertas de salud</p>
-                    <ul className="text-sm list-disc list-inside text-red-600">
-                        {alertas.map((alerta, index) => (
-                            <li key={index}>
-                                {alerta.mensaje} - {alerta.hora}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </div>
-        </section>
-    );
+        // Mapea los datos desde tu backend hacia la interfaz exacta requerida
+        const historialMascota: Props = {
+          pulso: {
+            promedioDiario: `${data.heartRate.value} bpm`,
+            promedioSemanal: data.heartRate.estado,
+          },
+          alimentosConsumidos: [
+            { dia: 'Hoy', cantidad: 'Pendiente backend' },
+            { dia: 'Ayer', cantidad: 'Pendiente backend' },
+          ],
+          actividad: {
+            promedioDiario: `${data.activity.value} min`,
+            promedioSemanal: data.activity.estado,
+          },
+          alertas: data.estadoGeneral !== 'Normal'
+            ? [{ mensaje: data.estadoGeneral, hora: 'Reciente' }]
+            : [],
+        };
+
+        setHistorial(historialMascota);
+      } catch (error) {
+        console.error('Error:', error);
+        setError('Error al cargar los datos.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    obtenerDatosMascota();
+  }, [petId]);
+
+  if (loading) return <div>Cargando historial...</div>;
+  if (error) return <div>{error}</div>;
+  if (!historial) return <div>No hay datos disponibles.</div>;
+
+  return (
+    <div className="p-4">
+      <h2 className="text-xl font-bold">Historial de Salud</h2>
+
+      <div className="my-4">
+        <h3 className="font-semibold">Pulso</h3>
+        <p>Promedio Diario: {historial.pulso.promedioDiario}</p>
+        <p>Promedio Semanal: {historial.pulso.promedioSemanal}</p>
+      </div>
+
+      <div className="my-4">
+        <h3 className="font-semibold">Alimentos Consumidos</h3>
+        {historial.alimentosConsumidos.map((alimento, idx) => (
+          <p key={idx}>{alimento.dia}: {alimento.cantidad}</p>
+        ))}
+      </div>
+
+      <div className="my-4">
+        <h3 className="font-semibold">Actividad Física</h3>
+        <p>Promedio Diario: {historial.actividad.promedioDiario}</p>
+        <p>Promedio Semanal: {historial.actividad.promedioSemanal}</p>
+      </div>
+
+      {historial.alertas.length > 0 && (
+        <div className="my-4 text-red-500">
+          <h3 className="font-semibold">Alertas Recientes</h3>
+          {historial.alertas.map((alerta, idx) => (
+            <p key={idx}>{alerta.mensaje} - {alerta.hora}</p>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
