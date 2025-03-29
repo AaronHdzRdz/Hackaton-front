@@ -1,7 +1,9 @@
+// src/components/ChatIA.tsx
 'use client';
 
 import { useState } from 'react';
 import { Send, MessageCircle, X } from 'lucide-react';
+import { getChat } from '../../../api/gemini.js';
 
 export default function ChatIA() {
   const [messages, setMessages] = useState<{ role: 'user' | 'ai'; content: string }[]>([]);
@@ -11,22 +13,20 @@ export default function ChatIA() {
 
   const handleSend = async () => {
     if (!input.trim()) return;
+
     const userMessage = { role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setLoading(true);
 
     try {
-      const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: input }),
-      });
-      const data = await res.json();
-      const aiMessage = { role: 'ai', content: data.response };
+      const response = await getChat(input);
+      const aiMessage = { role: 'ai', content: response };
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
       console.error('Error al obtener respuesta de la IA:', error);
+      const errorMessage = { role: 'ai', content: 'Hubo un error al obtener la respuesta.' };
+      setMessages(prev => [...prev, errorMessage]);
     } finally {
       setLoading(false);
     }
@@ -60,10 +60,11 @@ export default function ChatIA() {
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`max-w-[80%] px-4 py-2 rounded-lg text-sm whitespace-pre-wrap ${msg.role === 'user'
+                className={`max-w-[80%] px-4 py-2 rounded-lg text-sm whitespace-pre-wrap ${
+                  msg.role === 'user'
                     ? 'bg-[#FB8C00] text-white self-end ml-auto'
                     : 'bg-white text-[#333] self-start mr-auto border border-[#1976D2]'
-                  }`}
+                }`}
               >
                 {msg.content}
               </div>
