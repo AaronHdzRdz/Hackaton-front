@@ -7,7 +7,7 @@ export const data = {
         nivelActividad: "Alto",                // Nivel de actividad (Alto, Moderado, Bajo)
         alimentoEnPlato: "10g",              // Comida sugerida en gramos
         ultimoAlimento: "hace 1 hora",         // Última vez que comió
-        estadoGeneral: "bueno",                // bueno | alerta | peligro
+        estadoGeneral: "alerta",                // bueno | alerta | peligro
     },
     historial: {
         pulsoDiario: [92, 95, 98, 101, 100, 102, 97],

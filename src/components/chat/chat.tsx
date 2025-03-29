@@ -48,10 +48,10 @@ export default function ChatIA() {
       )}
 
       {open && (
-        <div className="fixed bottom-6 right-6 w-[350px] h-[500px] bg-white border rounded-lg shadow-lg flex flex-col z-50">
-          <div className="flex justify-between items-center px-4 py-2 border-b bg-[#FFF8E7]">
+        <div className="fixed bottom-6 right-6 w-[350px] h-[500px] bg-[#FFF8E7] border rounded-lg shadow-lg flex flex-col z-50">
+          <div className="flex justify-between items-center px-4 py-2 border-b bg-white">
             <h3 className="font-semibold text-[#FB8C00]">Asistente IA</h3>
-            <button onClick={() => setOpen(false)} className="text-[#FB8C00] hover:text-red-500">
+            <button onClick={() => setOpen(false)} className="text-[#1976D2] hover:text-[#FFA726]">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -60,30 +60,29 @@ export default function ChatIA() {
             {messages.map((msg, index) => (
               <div
                 key={index}
-                className={`max-w-[80%] px-4 py-2 rounded-lg text-sm whitespace-pre-wrap ${
-                  msg.role === 'user'
+                className={`max-w-[80%] px-4 py-2 rounded-lg text-sm whitespace-pre-wrap ${msg.role === 'user'
                     ? 'bg-[#FB8C00] text-white self-end ml-auto'
-                    : 'bg-[#FFF8E7] text-[#333] self-start mr-auto'
-                }`}
+                    : 'bg-white text-[#333] self-start mr-auto border border-[#1976D2]'
+                  }`}
               >
                 {msg.content}
               </div>
             ))}
-            {loading && <p className="text-sm text-gray-500">IA está escribiendo...</p>}
+            {loading && <p className="text-sm text-[#1976D2]">IA está escribiendo...</p>}
           </div>
 
-          <div className="flex items-center gap-2 border-t p-2">
+          <div className="flex items-center gap-2 border-t p-2 bg-white">
             <input
               type="text"
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              className="flex-1 px-3 py-2 border rounded focus:outline-none"
+              className="flex-1 px-3 py-2 border rounded focus:outline-none text-[#333]"
               placeholder="Escribe tu mensaje..."
             />
             <button
               onClick={handleSend}
-              className="bg-[#FB8C00] hover:bg-[#FFA726] text-white p-2 rounded"
+              className="bg-[#FDD835] hover:bg-[#FFA726] text-black p-2 rounded"
             >
               <Send className="w-5 h-5" />
             </button>

@@ -1,4 +1,3 @@
-'use client'
 import { Scatter } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
@@ -32,12 +31,6 @@ interface ResumenProps {
     estadoGeneral: 'bueno' | 'alerta' | 'peligro';
 }
 
-const estadoColor = {
-    bueno: 'bg-green-500',
-    alerta: 'bg-orange-400',
-    peligro: 'bg-red-500',
-};
-
 export default function InicioResumen({
     pulsoActual,
     nivelActividad,
@@ -70,17 +63,23 @@ export default function InicioResumen({
         ],
     };
 
-    const haComido = alimentoEnPlato >= 0;
+    const haComido = alimentoEnPlato > 0;
     const Icono = haComido ? CheckCircle : XCircle;
     const iconColor = haComido ? 'text-green-500' : 'text-red-500';
     const textoComida = haComido ? 'Ya comió' : 'No ha comido';
+
+    const estadoTexto = estadoGeneral === 'bueno'
+        ? 'Comportamiento de tu mascota DENTRO de lo HABITUAL'
+        : 'Comportamiento de tu mascota FUERA de lo HABITUAL';
+
+    const estadoColor = estadoGeneral === 'bueno' ? 'bg-green-500' : 'bg-orange-400';
 
     return (
         <section>
             <h2 className="text-2xl font-semibold mb-4">📊 Resumen en tiempo real</h2>
 
-            <div className={`mb-4 p-4 rounded shadow text-white ${estadoColor[estadoGeneral]}`}>
-                Estado general de la mascota: <strong className="uppercase">{estadoGeneral}</strong>
+            <div className={`mb-4 p-4 rounded shadow text-white ${estadoColor}`}>
+                {estadoTexto}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

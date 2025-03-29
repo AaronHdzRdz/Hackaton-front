@@ -42,14 +42,15 @@ export default function MapaUbicacion({ coordenadas }: UbicacionProps) {
     });
 
     return (
-        <section>
+        <section className="relative z-10">
             <h2 className="text-2xl font-semibold mb-4">📍 Ubicación</h2>
-            <div className="w-full h-96 rounded shadow overflow-hidden">
+            <div className="relative w-full h-96 rounded shadow overflow-hidden z-10">
                 <MapContainer
                     center={coordenadas[0] || { lat: 0, lng: 0 }}
                     zoom={14}
                     scrollWheelZoom={false}
-                    className="w-full h-full"
+                    className="w-full h-full z-10"
+                    style={{ zIndex: 0 }}
                 >
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
