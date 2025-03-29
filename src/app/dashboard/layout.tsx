@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { PawPrint, PlusCircle, LayoutDashboard, Cog, Bell, FlaskConical, User } from "lucide-react"
+import { PawPrint, PlusCircle, LayoutDashboard, User, BarChart2 } from "lucide-react"
 import { usePathname } from "next/navigation"
+import DefaultInicioView from "./inicio/page"
+import Script from "next/script"
 
 function Sidebar() {
     const [isOpen, setIsOpen] = useState(false)
@@ -15,13 +17,13 @@ function Sidebar() {
     }, [currentPath])
 
     const menuItems = [
-        { href: "/inicio", label: "Inicio", icon: <LayoutDashboard className="w-5 h-5" /> },
-        { href: "/mascotas", label: "Mis Mascotas", icon: <PawPrint className="w-5 h-5" /> },
-        { href: "/mascotas/nueva", label: "Registrar Mascota", icon: <PlusCircle className="w-5 h-5" /> },
-        { href: "/contenedor", label: "Contenedor", icon: <Cog className="w-5 h-5" /> },
-        { href: "/alertas", label: "Alertas", icon: <Bell className="w-5 h-5" /> },
-        { href: "/simulador", label: "Simulación", icon: <FlaskConical className="w-5 h-5" /> }
+        { href: "/dashboard/inicio", label: "Inicio", icon: <LayoutDashboard className="w-5 h-5" /> },
+        { href: "/dashboard/mascotas", label: "Mis Mascotas", icon: <PawPrint className="w-5 h-5" /> },
+        { href: "/dashboard/mascotas/nueva", label: "Registrar Mascota", icon: <PlusCircle className="w-5 h-5" /> },
+        { href: "/dashboard/mascotas/eliminar", label: "Eliminar Mascota", icon: <PlusCircle className="w-5 h-5" /> },
+        { href: "/dashboard/historial", label: "Historial", icon: <BarChart2 className="w-5 h-5" /> }
     ]
+
 
     return (
         <aside
@@ -35,8 +37,8 @@ function Sidebar() {
                     <div className="flex items-center gap-3 cursor-pointer">
                         <User className="w-6 h-6 text-[#FB8C00] min-w-[24px]" />
                         <div className={`transition-opacity duration-300 ${isOpen ? 'opacity-100' : 'opacity-0'} whitespace-nowrap`}>
-                            <p className="font-semibold text-[#FB8C00]">Juanito Pérez</p>
-                            <p className="text-sm text-[#333]">juanito@email.com</p>
+                            <p className="font-semibold text-[#FB8C00]">John Doe</p>
+                            <p className="text-sm text-[#333]">johndoe@email.com</p>
                         </div>
                     </div>
                 </Link>
@@ -62,66 +64,17 @@ function Sidebar() {
     )
 }
 
-function DefaultInicioView() {
-    return (
-        <div className="text-[#333] space-y-8">
-            <section>
-                <h2 className="text-2xl font-semibold mb-4">📊 Resumen en tiempo real</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <div className="bg-white p-4 rounded shadow">Pulso actual: <strong>98 BPM</strong></div>
-                    <div className="bg-white p-4 rounded shadow">Nivel de actividad: <div className="h-24 bg-[#FFF8E7] rounded"></div></div>
-                    <div className="bg-white p-4 rounded shadow">Alimento sugerido: <strong>120g</strong></div>
-                    <div className="bg-white p-4 rounded shadow col-span-1 md:col-span-2 lg:col-span-1 flex flex-col gap-2">
-                        <button className="bg-[#FB8C00] text-white py-2 px-4 rounded hover:bg-[#FFA726]">Dispensar alimento</button>
-                        <p className="text-sm text-gray-600">Último alimento dispensado: hace 2h</p>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <h2 className="text-2xl font-semibold mb-4">📍 Ubicación</h2>
-                <div className="w-full h-64 bg-gray-200 rounded shadow flex items-center justify-center">
-                    <p className="text-sm text-gray-500">[Mapa en tiempo real]</p>
-                </div>
-            </section>
-
-            <section>
-                <h2 className="text-2xl font-semibold mb-4">📈 Historial</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-white p-4 rounded shadow">
-                        <p className="mb-2 font-medium">Pulso diario/semanal</p>
-                        <div className="h-32 bg-[#FFF8E7] rounded" />
-                    </div>
-                    <div className="bg-white p-4 rounded shadow">
-                        <p className="mb-2 font-medium">Registro de alimentos consumidos</p>
-                        <ul className="text-sm list-disc list-inside">
-                            <li>Hoy: 120g</li>
-                            <li>Ayer: 100g</li>
-                        </ul>
-                    </div>
-                    <div className="bg-white p-4 rounded shadow">
-                        <p className="mb-2 font-medium">Actividad diaria</p>
-                        <div className="h-24 bg-[#FFF8E7] rounded" />
-                    </div>
-                    <div className="bg-white p-4 rounded shadow">
-                        <p className="mb-2 font-medium">Alertas de salud</p>
-                        <ul className="text-sm list-disc list-inside text-red-600">
-                            <li>Pulso elevado - 09:12 AM</li>
-                            <li>Baja actividad - Ayer</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-        </div>
-    )
-}
-
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname()
     const isDashboard = pathname === "/dashboard" || pathname === "/dashboard/inicio"
 
     return (
         <div className="flex min-h-screen bg-[#F2F2F2]">
+            <Script
+              src={`https://maps.googleapis.com/maps/api/js?key=AIzaSyBpjUDL33CJl-jRrV6v58RDxxVVQU1zfL4&libraries=places`}
+              strategy="beforeInteractive"
+            />
+            
             <Sidebar />
 
             <div className="ml-[64px] w-[calc(100%-64px)] flex flex-col transition-all duration-300">
